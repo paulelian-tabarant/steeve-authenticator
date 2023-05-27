@@ -39,8 +39,8 @@ class AuthControllerTest {
     }
 
     @Test
-    @DisplayName("should return 401 if name or password is missing")
-    void missingNameOrPassword() {
+    @DisplayName("should return 401 if name is missing")
+    void missingName() {
         var requestBody = new RequestBodyWithMissingName("a-password");
 
         try {
@@ -49,8 +49,21 @@ class AuthControllerTest {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
+
+    @Test
+    @DisplayName("should return 401 if password is missing")
+    void missingPassword() {
+        var requestBody = new RequestBodyWithMissingPassword("a name");
+
+        try {
+            mockMvc.perform(post("/api/auth", toJson(requestBody)))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     private static MockHttpServletRequestBuilder post(String url, String requestBody) {
         return MockMvcRequestBuilders.post(url)
