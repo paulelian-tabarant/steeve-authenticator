@@ -3,6 +3,7 @@ package octo.steeve.authenticator.controllers;
 import octo.steeve.authenticator.usecases.AuthenticateUser;
 import octo.steeve.authenticator.usecases.AuthenticateUserRequest;
 import octo.steeve.authenticator.usecases.NameMissingException;
+import octo.steeve.authenticator.usecases.PasswordMissingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +24,7 @@ public class AuthController {
             var token = authenticateUser.execute(request).token();
             return new AuthResponseBody(token);
 
-        } catch (NameMissingException nameMissingException) {
+        } catch (NameMissingException | PasswordMissingException nameMissingException) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Name is missing", nameMissingException);
         }
     }
