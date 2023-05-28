@@ -1,7 +1,6 @@
 package octo.steeve.authenticator;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import octo.steeve.authenticator.controllers.AuthRequestBody;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,68 +19,53 @@ import static org.hamcrest.Matchers.hasLength;
 @AutoConfigureMockMvc
 class AuthControllerTest {
 
+    public static final String apiUrl = "/api/auth";
     @Autowired
     private MockMvc mockMvc;
 
     @Test
     @DisplayName("should return a 32 chars token when provided existing name and password")
-    void passingCase() {
+    void passingCase() throws Exception {
         var requestBody = new AuthRequestBody("dertex", "killer");
 
-        try {
-            mockMvc.perform(post("/api/auth", toJson(requestBody)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.token").isString())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.token", hasLength(32)));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        mockMvc.perform(post(apiUrl, requestBody))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.token").isString())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.token", hasLength(32)));
     }
 
     @Test
     @DisplayName("should return 401 if the user does not exist")
-    void userDoesNotExist() {
-        var requestBody = new AuthRequestBody("gilbert", "killer");
+    void userDoesNotExist() throws Exception {
+        var nonExistingUserRequest = new AuthRequestBody("gilbert", "killer");
 
-        try {
-            mockMvc.perform(post("/api/auth", toJson(requestBody)))
-                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        mockMvc.perform(post(apiUrl, nonExistingUserRequest))
+            .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 
     @Test
     @DisplayName("should return 401 if name is missing")
-    void missingName() {
-        var requestBody = new RequestBodyWithMissingName("a-password");
+    void missingName() throws Exception {
+        var requestBody = new NameMissingRequestBody("a password looking for its name");
 
-        try {
-            mockMvc.perform(post("/api/auth", toJson(requestBody)))
-                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        mockMvc.perform(post(apiUrl, requestBody))
+            .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 
     @Test
     @DisplayName("should return 401 if password is missing")
-    void missingPassword() {
-        var requestBody = new RequestBodyWithMissingPassword("a name");
+    void missingPassword() throws Exception {
+        var requestBody = new PasswordMissingRequestBody("a name looking for its password");
 
-        try {
-            mockMvc.perform(post("/api/auth", toJson(requestBody)))
-                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        mockMvc.perform(post(apiUrl, requestBody))
+            .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 
 
-    private static MockHttpServletRequestBuilder post(String url, String requestBody) {
+    private static MockHttpServletRequestBuilder post(String url, Object requestBody) {
         return MockMvcRequestBuilders.post(url)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(requestBody);
+            .content(toJson(requestBody));
     }
 
     private static String toJson(Object requestBody) {
