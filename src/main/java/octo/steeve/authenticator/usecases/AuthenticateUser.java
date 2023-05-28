@@ -1,12 +1,19 @@
 package octo.steeve.authenticator.usecases;
 
 import octo.steeve.authenticator.entities.User;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.UUID;
 
+@Component
 public class AuthenticateUser {
-    List<User> users = List.of(new User("dertex", "killer"));
+
+    private final HardcodedUserRepository userRepository;
+
+    public AuthenticateUser(HardcodedUserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public AuthenticateUserResult execute(AuthenticateUserParams request) throws NameMissingException, PasswordMissingException, UserDoesNotExistException {
         var user = request.user();
@@ -14,12 +21,8 @@ public class AuthenticateUser {
         if (user.name() == null) throw new NameMissingException();
         if (user.password() == null) throw new PasswordMissingException();
 
-        var userExists = users.contains(user);
+        userRepository.findBy(user).orElseThrow(UserDoesNotExistException::new);
 
-        if (!userExists) throw new UserDoesNotExistException();
-
-        return new AuthenticateUserResult(
-            UUID.randomUUID().toString().substring(0, 32)
-        );
+        return new AuthenticateUserResult(UUID.randomUUID().toString().substring(0, 32));
     }
 }

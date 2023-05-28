@@ -12,10 +12,14 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping(value = "/api", produces = "application/json")
 public class AuthController {
+    private final AuthenticateUser authenticateUser;
+
+    public AuthController(AuthenticateUser authenticateUser) {
+        this.authenticateUser = authenticateUser;
+    }
 
     @PostMapping(value = "/auth")
     public AuthResponse authenticate(@RequestBody AuthRequest request) throws NameMissingException {
-        var authenticateUser = new AuthenticateUser();
         var params = toAuthenticateUserParams(request);
 
         try {
