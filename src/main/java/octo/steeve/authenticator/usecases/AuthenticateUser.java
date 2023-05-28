@@ -1,17 +1,14 @@
 package octo.steeve.authenticator.usecases;
 
-import octo.steeve.authenticator.entities.User;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.UUID;
 
 @Component
 public class AuthenticateUser {
+    private final UserRepository userRepository;
 
-    private final HardcodedUserRepository userRepository;
-
-    public AuthenticateUser(HardcodedUserRepository userRepository) {
+    public AuthenticateUser(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
