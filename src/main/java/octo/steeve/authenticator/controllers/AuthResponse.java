@@ -1,4 +1,4 @@
 package octo.steeve.authenticator.controllers;
 
-public record AuthResponseBody(String token) {
+public record AuthResponse(String token) {
 }

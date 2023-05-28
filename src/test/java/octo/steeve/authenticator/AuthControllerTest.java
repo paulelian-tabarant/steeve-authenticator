@@ -1,7 +1,7 @@
 package octo.steeve.authenticator;
 
 import com.google.gson.Gson;
-import octo.steeve.authenticator.controllers.AuthRequestBody;
+import octo.steeve.authenticator.controllers.AuthRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ class AuthControllerTest {
     @Test
     @DisplayName("should return a 32 chars token when provided existing name and password")
     void passingCase() throws Exception {
-        var requestBody = new AuthRequestBody("dertex", "killer");
+        var requestBody = new AuthRequest("dertex", "killer");
 
         mockMvc.perform(post(apiUrl, requestBody))
             .andExpect(MockMvcResultMatchers.status().isOk())
@@ -37,7 +37,7 @@ class AuthControllerTest {
     @Test
     @DisplayName("should return 401 if the user does not exist")
     void userDoesNotExist() throws Exception {
-        var nonExistingUserRequest = new AuthRequestBody("gilbert", "killer");
+        var nonExistingUserRequest = new AuthRequest("gilbert", "killer");
 
         mockMvc.perform(post(apiUrl, nonExistingUserRequest))
             .andExpect(MockMvcResultMatchers.status().isUnauthorized());

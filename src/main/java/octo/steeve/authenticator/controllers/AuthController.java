@@ -14,21 +14,24 @@ import org.springframework.web.server.ResponseStatusException;
 public class AuthController {
 
     @PostMapping(value = "/auth")
-    public AuthResponseBody authenticate(@RequestBody AuthRequestBody requestBody) throws NameMissingException {
+    public AuthResponse authenticate(@RequestBody AuthRequest request) throws NameMissingException {
         var authenticateUser = new AuthenticateUser();
-        var user = new User(requestBody.name(), requestBody.password());
-        var request = new AuthenticateUserRequest(user);
+        var params = toAuthenticateUserParams(request);
 
         try {
-            var token = authenticateUser.execute(request).token();
-            return new AuthResponseBody(token);
-
-        } catch (NameMissingException nameMissingException) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Name is missing", nameMissingException);
-        } catch (PasswordMissingException passwordMissingException) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Password is missing", passwordMissingException);
-        } catch (UserDoesNotExistException userDoesNotExistException) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User does not exist", userDoesNotExistException);
+            var result = authenticateUser.execute(params);
+            return toAuthResponse(result);
+        } catch (NameMissingException | PasswordMissingException | UserDoesNotExistException exception) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, exception.getMessage(), exception);
         }
+    }
+
+    private static AuthResponse toAuthResponse(AuthenticateUserResult result) {
+        return new AuthResponse(result.token());
+    }
+
+    private static AuthenticateUserParams toAuthenticateUserParams(AuthRequest requestBody) {
+        var user = new User(requestBody.name(), requestBody.password());
+        return new AuthenticateUserParams(user);
     }
 }

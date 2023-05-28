@@ -8,7 +8,7 @@ import java.util.UUID;
 public class AuthenticateUser {
     List<User> users = List.of(new User("dertex", "killer"));
 
-    public AuthenticateUserResult execute(AuthenticateUserRequest request) throws NameMissingException, PasswordMissingException, UserDoesNotExistException {
+    public AuthenticateUserResult execute(AuthenticateUserParams request) throws NameMissingException, PasswordMissingException, UserDoesNotExistException {
         var user = request.user();
 
         if (user.name() == null) throw new NameMissingException();
