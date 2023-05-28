@@ -1,4 +1,6 @@
 package octo.steeve.authenticator.usecases;
 
-public record AuthenticateUserRequest(String name, String password) {
+import octo.steeve.authenticator.entities.User;
+
+public record AuthenticateUserRequest(User user) {
 }

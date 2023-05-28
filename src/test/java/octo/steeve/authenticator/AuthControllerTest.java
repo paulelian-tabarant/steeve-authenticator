@@ -39,6 +39,19 @@ class AuthControllerTest {
     }
 
     @Test
+    @DisplayName("should return 401 if the user does not exist")
+    void userDoesNotExist() {
+        var requestBody = new AuthRequestBody("gilbert", "killer");
+
+        try {
+            mockMvc.perform(post("/api/auth", toJson(requestBody)))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
     @DisplayName("should return 401 if name is missing")
     void missingName() {
         var requestBody = new RequestBodyWithMissingName("a-password");
