@@ -1,6 +1,7 @@
-package octo.steeve.authenticator.usecases;
+package octo.steeve.authenticator.presenters;
 
 import octo.steeve.authenticator.entities.User;
+import octo.steeve.authenticator.entities.UserRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

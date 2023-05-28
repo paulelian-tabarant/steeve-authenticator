@@ -1,5 +1,6 @@
 package octo.steeve.authenticator.usecases;
 
+import octo.steeve.authenticator.entities.UserRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
