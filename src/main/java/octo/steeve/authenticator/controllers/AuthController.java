@@ -28,8 +28,8 @@ public class AuthController {
         var params = toAuthenticateUserParams(request);
 
         try {
-            var result = authenticateUser.execute(params);
-            return toAuthResponse(result);
+            var authenticateUserResult = authenticateUser.execute(params);
+            return toAuthResponse(authenticateUserResult);
         } catch (NameMissingException | PasswordMissingException | UserDoesNotExistException exception) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, exception.getMessage(), exception);
         }
