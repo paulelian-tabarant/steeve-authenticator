@@ -1,4 +1,4 @@
-package octo.steeve.authenticator.usecases;
+package octo.steeve.authenticator.usecases.exceptions;
 
 public class PasswordMissingException extends Exception {
     public PasswordMissingException() {

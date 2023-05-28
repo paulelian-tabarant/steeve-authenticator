@@ -1,4 +1,4 @@
-package octo.steeve.authenticator.usecases;
+package octo.steeve.authenticator.usecases.exceptions;
 
 public class NameMissingException extends Exception {
     public NameMissingException() {

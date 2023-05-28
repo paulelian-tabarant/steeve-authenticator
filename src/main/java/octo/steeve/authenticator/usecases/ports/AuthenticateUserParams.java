@@ -1,4 +1,4 @@
-package octo.steeve.authenticator.usecases;
+package octo.steeve.authenticator.usecases.ports;
 
 import octo.steeve.authenticator.entities.User;
 

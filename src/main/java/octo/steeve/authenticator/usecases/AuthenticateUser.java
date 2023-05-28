@@ -3,6 +3,11 @@ package octo.steeve.authenticator.usecases;
 import octo.steeve.authenticator.entities.Token;
 import octo.steeve.authenticator.entities.TokenGenerator;
 import octo.steeve.authenticator.entities.UserRepository;
+import octo.steeve.authenticator.usecases.exceptions.NameMissingException;
+import octo.steeve.authenticator.usecases.exceptions.PasswordMissingException;
+import octo.steeve.authenticator.usecases.exceptions.UserDoesNotExistException;
+import octo.steeve.authenticator.usecases.ports.AuthenticateUserParams;
+import octo.steeve.authenticator.usecases.ports.AuthenticateUserResult;
 import org.springframework.stereotype.Component;
 
 @Component
